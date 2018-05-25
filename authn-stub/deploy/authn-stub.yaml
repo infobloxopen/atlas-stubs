@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: atlas-stubs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authn-stub
+  namespace: atlas-stubs
+  labels:
+    app: authn-stub
+spec:
+  type: NodePort
+  ports:
+  - targetPort: 8040
+    port: 80
+  selector:
+    app: authn-stub
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: authn-stub
+  namespace: atlas-stubs
+  labels:
+    app: authn-stub
+spec:
+  selector:
+    matchLabels:
+      app: authn-stub
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: authn-stub
+    spec:
+      containers:
+      - name: authn-stub
+        image: infoblox/authn-stub:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8040
+---
