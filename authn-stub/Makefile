@@ -44,3 +44,11 @@ vendor-update:
 clean:
 	@docker rmi -f $(shell docker images -q $(IMAGE)) || true
 	@docker rmi -f $(shell docker images --filter "label=intermediate=true" -q) || true
+
+.PHONY: up
+up:
+	@kubectl apply -f deploy/authn-stub.yaml
+
+.PHONY: down
+down:
+	@kubectl -natlas-stubs delete deployment authn-stub
