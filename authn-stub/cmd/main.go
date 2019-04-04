@@ -1,8 +1,9 @@
 package main
 
 import (
-	log "github.com/sirupsen/logrus"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 var userinfoToJWT = map[string]string{
@@ -14,6 +15,12 @@ var userinfoToJWT = map[string]string{
 
 func main() {
 	http.HandleFunc("/auth", func(w http.ResponseWriter, r *http.Request) {
+		if token := r.Header.Get("Throw-Token"); token != "" {
+			w.Header().Set("Grpc-Metadata-Authorization", "Bearer "+token)
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
 		if v := userinfoToJWT[r.Header.Get("User-And-Pass")]; v == "" {
 			http.Error(w, "unauthorized", http.StatusUnauthorized)
 		} else {
