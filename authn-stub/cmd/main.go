@@ -18,6 +18,7 @@ func main() {
 		if token := r.Header.Get("Throw-Token"); token != "" {
 			w.Header().Set("Grpc-Metadata-Authorization", "Bearer "+token)
 			w.WriteHeader(http.StatusOK)
+			return
 		}
 
 		if v := userinfoToJWT[r.Header.Get("User-And-Pass")]; v == "" {
